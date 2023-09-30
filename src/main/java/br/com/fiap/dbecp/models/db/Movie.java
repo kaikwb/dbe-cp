@@ -1,8 +1,15 @@
+/*
+ * Nomes: Kaik Wulck Bassanelli   RM: 96731
+ *        Lucas Satoru Shiaku     RM: 97019
+ *        Rafael Vieira Pinto     RM: 97117
+ * */
+
 package br.com.fiap.dbecp.models.db;
 
 import br.com.fiap.dbecp.enums.Genre;
 import jakarta.persistence.*;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Table(name = "movies")
@@ -17,8 +24,8 @@ public class Movie {
     @Column(name = "title", nullable = false)
     private String title;
 
-    @OneToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
-    @Column(name = "main_actor_id", nullable = false)
+    @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @JoinColumn(name = "main_actor_id", referencedColumnName = "id")
     private Person mainActor;
 
     @Column(name = "duration", nullable = false)
@@ -36,6 +43,9 @@ public class Movie {
 
     @Column(name = "rating")
     private String rating;
+
+    @Column(name = "active")
+    private Boolean active;
 
     @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     @JoinTable(
@@ -81,10 +91,11 @@ public class Movie {
         this.country = country;
         this.genre = genre;
         this.rating = rating;
-        this.directors = directors;
-        this.producers = producers;
-        this.writers = writers;
-        this.cast = cast;
+        this.directors = new ArrayList<>(directors);
+        this.producers = new ArrayList<>(producers);
+        this.writers = new ArrayList<>(writers);
+        this.cast = new ArrayList<>(cast);
+        this.active = true;
     }
 
     public Integer getId() {
@@ -143,6 +154,14 @@ public class Movie {
         this.genre = genre;
     }
 
+    public Boolean isActive() {
+        return active;
+    }
+
+    public void setActive(Boolean active) {
+        this.active = active;
+    }
+
     public String getRating() {
         return rating;
     }
@@ -156,7 +175,7 @@ public class Movie {
     }
 
     public void setDirectors(List<Person> directors) {
-        this.directors = directors;
+        this.directors = new ArrayList<>(directors);
     }
 
     public List<Person> getProducers() {
@@ -164,7 +183,7 @@ public class Movie {
     }
 
     public void setProducers(List<Person> producers) {
-        this.producers = producers;
+        this.producers = new ArrayList<>(producers);
     }
 
     public List<Person> getWriters() {
@@ -172,7 +191,7 @@ public class Movie {
     }
 
     public void setWriters(List<Person> writers) {
-        this.writers = writers;
+        this.writers = new ArrayList<>(writers);
     }
 
     public List<Person> getCast() {
@@ -180,6 +199,6 @@ public class Movie {
     }
 
     public void setCast(List<Person> cast) {
-        this.cast = cast;
+        this.cast = new ArrayList<>(cast);
     }
 }
